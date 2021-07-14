@@ -17,10 +17,13 @@ type Response struct {
 	Body      string    `json:"body"`
 }
 
-const BotToken = "BOT_TOKEN"
-const Token = "GIT_TOKEN"
-const User = "GIT USER"
-const Repo = "GIT REPO"
+const UpdateCycle = 5
+const (
+	BotToken = "BOT_TOKEN"
+	Token    = "GIT_TOKEN"
+	User     = "GIT USER"
+	Repo     = "GIT REPO"
+)
 
 func main() {
 	bot, err := tgbotapi.NewBotAPI(BotToken)
@@ -79,13 +82,13 @@ func getIssues() ([]Response, error) {
 }
 
 func getNewIssues(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
-	time.Sleep(5 * time.Minute)
+	time.Sleep(UpdateCycle * time.Minute)
 	responses, err := getIssues()
 	if err != nil {
 		log.Fatal(err)
 	}
 	for _, response := range responses {
-		if response.State == "open" && time.Now().Unix()-response.CreatedAt.Unix() <= 300 {
+		if response.State == "open" && time.Now().Unix()-response.CreatedAt.Unix() <= UpdateCycle*60 {
 			_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("NEW ISSUE!\n\n"+response.Title+"\n\n"+response.Body+"\n\n"+response.Url)))
 		}
 	}
