@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// The info we need from the curl response 
 type Response struct {
 	CreatedAt time.Time `json:"created_at"`
 	Url       string    `json:"url"`
@@ -17,12 +18,15 @@ type Response struct {
 	Body      string    `json:"body"`
 }
 
+// Cycles for every automatic update for new issues in minutes 
 const UpdateCycle = 5
+
+// Add your bot and github infos here
 const (
 	BotToken = "BOT_TOKEN"
 	Token    = "GIT_TOKEN"
-	User     = "GIT USER"
-	Repo     = "GIT REPO"
+	User     = "GIT_USER"
+	Repo     = "GIT_REPO"
 )
 
 func main() {
@@ -81,6 +85,7 @@ func getIssues() ([]Response, error) {
 	return data, nil
 }
 
+// getNewIssues checks for new issues on the repository automatically every UpdateCycle minutes
 func getNewIssues(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 	time.Sleep(UpdateCycle * time.Minute)
 	responses, err := getIssues()
