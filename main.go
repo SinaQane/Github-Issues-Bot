@@ -23,10 +23,10 @@ const UpdateCycle = 5
 
 // Add your bot and github infos here
 const (
-	BotToken = "BOT_TOKEN"
-	Token    = "GIT_TOKEN"
-	User     = "GIT_USER"
-	Repo     = "GIT_REPO"
+	BotToken = "BOT_TOKEN"  // Your bot token
+	Token    = "GIT_TOKEN"  // Your Github token
+	User     = "GIT_USER"   // Your Github account's id
+	Repo     = "GIT_REPO"   // Your Github repository name
 )
 
 func main() {
