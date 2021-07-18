@@ -87,14 +87,16 @@ func getIssues() ([]Response, error) {
 
 // getNewIssues checks for new issues on the repository automatically every UpdateCycle minutes
 func getNewIssues(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
-	time.Sleep(UpdateCycle * time.Minute)
-	responses, err := getIssues()
-	if err != nil {
-		log.Fatal(err)
-	}
-	for _, response := range responses {
-		if response.State == "open" && time.Now().Unix()-response.CreatedAt.Unix() <= UpdateCycle*60 {
-			_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("NEW ISSUE!\n\n"+response.Title+"\n\n"+response.Body+"\n\n"+response.Url)))
+	for {
+		time.Sleep(UpdateCycle * time.Minute)
+		responses, err := getIssues()
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, response := range responses {
+			if response.State == "open" && time.Now().Unix()-response.CreatedAt.Unix() <= UpdateCycle*60 {
+				_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("NEW ISSUE!\n\n"+response.Title+"\n\n"+response.Body+"\n\n"+response.Url)))
+			}
 		}
 	}
 }
